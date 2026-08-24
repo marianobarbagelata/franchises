@@ -114,9 +114,9 @@
   name: Percy Jackson
   description: Saga de fantasia juvenil de Rick Riordan basada en mitologia griega.
   present_in: [book, series, movie]
-- slug: a-song-of-ice-and-fire
-  name: A Song of Ice and Fire
-  description: Saga de fantasia epica de George R.R. Martin, base de Game of Thrones.
+- slug: game-of-thrones
+  name: Game of Thrones
+  description: Saga de fantasia epica de George R.R. Martin (libros "A Song of Ice and Fire"), adaptada por HBO.
   present_in: [book, series, game]
 - slug: the-chronicles-of-narnia
   name: The Chronicles of Narnia
@@ -402,3 +402,7 @@
   name: The Simpsons
   description: Serie animada satirica sobre una familia disfuncional estadounidense.
   present_in: [series, movie, game]
+- slug: breaking-bad
+  name: Breaking Bad
+  description: Serie sobre un profesor de quimica que se convierte en fabricante de metanfetamina, con su spin-off Better Call Saul.
+  present_in: [series, movie]
