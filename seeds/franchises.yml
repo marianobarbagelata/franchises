@@ -159,7 +159,7 @@
   description: Saga de espionaje britanico basada en las novelas de Ian Fleming.
   present_in: [movie, book, game]
 - slug: mission-impossible
-  name: Mission: Impossible
+  name: "Mission: Impossible"
   description: Saga de espionaje y accion protagonizada por Ethan Hunt.
   present_in: [movie, series, game]
 - slug: the-matrix
@@ -375,7 +375,7 @@
   description: El juego de rol de mesa de fantasia que origino el genero.
   present_in: [game, movie, series, book]
 - slug: magic-the-gathering
-  name: Magic: The Gathering
+  name: "Magic: The Gathering"
   description: Juego de cartas coleccionables de fantasia.
   present_in: [game, book]
 - slug: yu-gi-oh
@@ -383,7 +383,7 @@
   description: Franquicia japonesa sobre duelos con cartas coleccionables magicas.
   present_in: [series, movie, game, book]
 - slug: avatar-the-last-airbender
-  name: Avatar: The Last Airbender
+  name: "Avatar: The Last Airbender"
   description: Serie animada sobre un mundo dividido en naciones elementales.
   present_in: [series, movie, book, game]
 - slug: avatar-cameron
