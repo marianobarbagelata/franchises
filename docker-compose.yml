@@ -27,6 +27,11 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/airflow/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/airflow/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/airflow/plugins:/opt/airflow/plugins
+    # scripts/ y seeds/ no son parte del pipeline recurrente de Airflow --
+    # se montan igual para poder correr utilidades puntuales (como el
+    # bootstrap del seed) reusando la misma imagen y sus dependencias.
+    - ${AIRFLOW_PROJ_DIR:-.}/scripts:/opt/airflow/scripts
+    - ${AIRFLOW_PROJ_DIR:-.}/seeds:/opt/airflow/seeds
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on

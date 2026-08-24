@@ -1,0 +1,404 @@
+# Seed de franquicias -- generado a mano (ver scripts/generate_seed.py para
+# la version asistida por IA con busqueda web, disponible si mas adelante
+# se quiere ampliar el catalogo). "book" incluye comics/manga por
+# simplicidad de schema (work_type solo distingue book/movie/series/game).
+- slug: lord-of-the-rings
+  name: The Lord of the Rings
+  description: Saga de fantasia de J.R.R. Tolkien sobre la lucha por el Anillo Unico en la Tierra Media.
+  present_in: [book, movie, series, game]
+- slug: harry-potter
+  name: Harry Potter
+  description: La saga de un joven mago en Hogwarts, de J.K. Rowling.
+  present_in: [book, movie, game, series]
+- slug: star-wars
+  name: Star Wars
+  description: Opera espacial creada por George Lucas sobre la lucha entre la Republica/Resistencia y el Imperio/Primera Orden.
+  present_in: [movie, series, book, game]
+- slug: the-witcher
+  name: The Witcher
+  description: Saga de fantasia de Andrzej Sapkowski sobre el cazador de monstruos Geralt de Rivia.
+  present_in: [book, series, game]
+- slug: star-trek
+  name: Star Trek
+  description: Franquicia de ciencia ficcion sobre la exploracion espacial de la Federacion.
+  present_in: [series, movie, book, game]
+- slug: marvel-cinematic-universe
+  name: Marvel Cinematic Universe
+  description: Universo compartido de superheroes basado en los comics de Marvel.
+  present_in: [movie, series, game]
+- slug: spider-man
+  name: Spider-Man
+  description: El superheroe arachnido de Marvel, Peter Parker.
+  present_in: [movie, series, game, book]
+- slug: x-men
+  name: X-Men
+  description: Equipo de mutantes superheroes de Marvel.
+  present_in: [movie, series, game, book]
+- slug: batman
+  name: Batman
+  description: El vigilante de Gotham City de DC Comics.
+  present_in: [movie, series, game, book]
+- slug: dc-extended-universe
+  name: DC Extended Universe
+  description: Universo compartido de superheroes basado en los comics de DC.
+  present_in: [movie, series, game]
+- slug: assassins-creed
+  name: Assassin's Creed
+  description: Saga de accion historica sobre el conflicto entre Asesinos y Templarios.
+  present_in: [game, book, series]
+- slug: the-elder-scrolls
+  name: The Elder Scrolls
+  description: Saga de rol de fantasia de mundo abierto ambientada en Tamriel.
+  present_in: [game]
+- slug: halo
+  name: Halo
+  description: Saga de ciencia ficcion militar protagonizada por el Master Chief.
+  present_in: [game, book, series]
+- slug: god-of-war
+  name: God of War
+  description: Saga de accion inspirada en la mitologia griega y nordica, protagonizada por Kratos.
+  present_in: [game, series]
+- slug: the-last-of-us
+  name: The Last of Us
+  description: Historia post-apocaliptica de supervivencia de Naughty Dog.
+  present_in: [game, series]
+- slug: resident-evil
+  name: Resident Evil
+  description: Saga de survival horror sobre brotes de zombis causados por la corporacion Umbrella.
+  present_in: [game, movie, series]
+- slug: silent-hill
+  name: Silent Hill
+  description: Saga de terror psicologico ambientada en un pueblo maldito.
+  present_in: [game, movie]
+- slug: tomb-raider
+  name: Tomb Raider
+  description: Saga de accion y aventura protagonizada por la arqueologa Lara Croft.
+  present_in: [game, movie, series]
+- slug: mass-effect
+  name: Mass Effect
+  description: Saga de rol de ciencia ficcion espacial de BioWare.
+  present_in: [game, book]
+- slug: dragon-age
+  name: Dragon Age
+  description: Saga de rol de fantasia de BioWare.
+  present_in: [game, book]
+- slug: warcraft
+  name: Warcraft
+  description: Universo de fantasia de Blizzard, base de World of Warcraft.
+  present_in: [game, movie, book]
+- slug: diablo
+  name: Diablo
+  description: Saga de accion-rol oscura de Blizzard.
+  present_in: [game, book]
+- slug: starcraft
+  name: StarCraft
+  description: Saga de estrategia en tiempo real de ciencia ficcion de Blizzard.
+  present_in: [game, book]
+- slug: warhammer-40000
+  name: Warhammer 40,000
+  description: Universo de ciencia ficcion belica de Games Workshop.
+  present_in: [game, book, series]
+- slug: the-hunger-games
+  name: The Hunger Games
+  description: Trilogia distopica de Suzanne Collins sobre un torneo mortal televisado.
+  present_in: [book, movie]
+- slug: divergent
+  name: Divergent
+  description: Trilogia distopica juvenil de Veronica Roth.
+  present_in: [book, movie]
+- slug: twilight
+  name: Twilight
+  description: Saga romantica sobrenatural de Stephenie Meyer.
+  present_in: [book, movie]
+- slug: percy-jackson
+  name: Percy Jackson
+  description: Saga de fantasia juvenil de Rick Riordan basada en mitologia griega.
+  present_in: [book, series, movie]
+- slug: a-song-of-ice-and-fire
+  name: A Song of Ice and Fire
+  description: Saga de fantasia epica de George R.R. Martin, base de Game of Thrones.
+  present_in: [book, series, game]
+- slug: the-chronicles-of-narnia
+  name: The Chronicles of Narnia
+  description: Saga de fantasia de C.S. Lewis sobre un mundo magico.
+  present_in: [book, movie]
+- slug: his-dark-materials
+  name: His Dark Materials
+  description: Trilogia de fantasia de Philip Pullman sobre universos paralelos.
+  present_in: [book, series, movie]
+- slug: dune
+  name: Dune
+  description: Saga de ciencia ficcion de Frank Herbert ambientada en el planeta desertico Arrakis.
+  present_in: [book, movie, series, game]
+- slug: foundation
+  name: Foundation
+  description: Saga de ciencia ficcion de Isaac Asimov sobre el colapso de un imperio galactico.
+  present_in: [book, series]
+- slug: the-expanse
+  name: The Expanse
+  description: Saga de ciencia ficcion de James S.A. Corey sobre la colonizacion del sistema solar.
+  present_in: [book, series, game]
+- slug: ready-player-one
+  name: Ready Player One
+  description: Novela de ciencia ficcion de Ernest Cline sobre un mundo virtual masivo.
+  present_in: [book, movie]
+- slug: jurassic-park
+  name: Jurassic Park
+  description: Saga de ciencia ficcion de Michael Crichton sobre un parque de dinosaurios clonados.
+  present_in: [book, movie, series, game]
+- slug: pirates-of-the-caribbean
+  name: Pirates of the Caribbean
+  description: Saga de aventuras piratas de Disney.
+  present_in: [movie, game]
+- slug: indiana-jones
+  name: Indiana Jones
+  description: Saga de aventuras arqueologicas creada por George Lucas y Steven Spielberg.
+  present_in: [movie, series, game]
+- slug: james-bond
+  name: James Bond
+  description: Saga de espionaje britanico basada en las novelas de Ian Fleming.
+  present_in: [movie, book, game]
+- slug: mission-impossible
+  name: Mission: Impossible
+  description: Saga de espionaje y accion protagonizada por Ethan Hunt.
+  present_in: [movie, series, game]
+- slug: the-matrix
+  name: The Matrix
+  description: Saga de ciencia ficcion sobre una realidad simulada, de las hermanas Wachowski.
+  present_in: [movie, game]
+- slug: terminator
+  name: Terminator
+  description: Saga de ciencia ficcion sobre una guerra contra maquinas inteligentes.
+  present_in: [movie, series, game, book]
+- slug: alien
+  name: Alien
+  description: Saga de terror y ciencia ficcion sobre el Xenomorfo.
+  present_in: [movie, series, game, book]
+- slug: predator
+  name: Predator
+  description: Saga de ciencia ficcion sobre un cazador alienigena.
+  present_in: [movie, game]
+- slug: blade-runner
+  name: Blade Runner
+  description: Saga de ciencia ficcion neo-noir basada en la novela de Philip K. Dick.
+  present_in: [movie, game, book]
+- slug: ghost-in-the-shell
+  name: Ghost in the Shell
+  description: Franquicia de ciberpunk japonesa sobre inteligencia artificial e identidad.
+  present_in: [movie, series, game, book]
+- slug: dragon-ball
+  name: Dragon Ball
+  description: Franquicia japonesa de accion y artes marciales creada por Akira Toriyama.
+  present_in: [series, movie, game, book]
+- slug: naruto
+  name: Naruto
+  description: Franquicia japonesa sobre un joven ninja que busca reconocimiento.
+  present_in: [series, movie, game, book]
+- slug: one-piece
+  name: One Piece
+  description: Franquicia japonesa de piratas creada por Eiichiro Oda.
+  present_in: [series, movie, game, book]
+- slug: attack-on-titan
+  name: Attack on Titan
+  description: Franquicia japonesa sobre la humanidad luchando contra gigantes devoradores.
+  present_in: [series, movie, game, book]
+- slug: my-hero-academia
+  name: My Hero Academia
+  description: Franquicia japonesa sobre una escuela de superheroes.
+  present_in: [series, movie, game, book]
+- slug: pokemon
+  name: Pokemon
+  description: Franquicia japonesa sobre entrenadores que capturan y combaten con criaturas.
+  present_in: [game, series, movie, book]
+- slug: digimon
+  name: Digimon
+  description: Franquicia japonesa sobre monstruos digitales.
+  present_in: [game, series, movie]
+- slug: final-fantasy
+  name: Final Fantasy
+  description: Saga japonesa de rol de fantasia y ciencia ficcion de Square Enix.
+  present_in: [game, movie, series]
+- slug: kingdom-hearts
+  name: Kingdom Hearts
+  description: Saga de accion-rol que cruza universos de Disney y Square Enix.
+  present_in: [game]
+- slug: the-legend-of-zelda
+  name: The Legend of Zelda
+  description: Saga de aventuras de fantasia de Nintendo protagonizada por Link.
+  present_in: [game, movie]
+- slug: super-mario
+  name: Super Mario
+  description: Saga de plataformas de Nintendo protagonizada por el fontanero Mario.
+  present_in: [game, movie, series]
+- slug: sonic-the-hedgehog
+  name: Sonic the Hedgehog
+  description: Saga de plataformas veloces de Sega.
+  present_in: [game, movie, series, book]
+- slug: metal-gear
+  name: Metal Gear
+  description: Saga japonesa de accion sigilosa creada por Hideo Kojima.
+  present_in: [game, book]
+- slug: call-of-duty
+  name: Call of Duty
+  description: Saga de disparos en primera persona belicos.
+  present_in: [game, book]
+- slug: transformers
+  name: Transformers
+  description: Franquicia sobre robots alienigenas que se transforman en vehiculos.
+  present_in: [movie, series, game, book]
+- slug: teenage-mutant-ninja-turtles
+  name: Teenage Mutant Ninja Turtles
+  description: Franquicia sobre cuatro tortugas mutantes ninja.
+  present_in: [series, movie, game, book]
+- slug: power-rangers
+  name: Power Rangers
+  description: Franquicia sobre jovenes heroes con trajes de super poder.
+  present_in: [series, movie, game]
+- slug: mega-man
+  name: Mega Man
+  description: Saga japonesa de plataformas y accion de Capcom.
+  present_in: [game, series]
+- slug: street-fighter
+  name: Street Fighter
+  description: Saga japonesa de lucha de Capcom.
+  present_in: [game, movie, series]
+- slug: mortal-kombat
+  name: Mortal Kombat
+  description: Saga de lucha conocida por su violencia grafica.
+  present_in: [game, movie, series]
+- slug: tekken
+  name: Tekken
+  description: Saga japonesa de lucha en 3D de Bandai Namco.
+  present_in: [game, movie]
+- slug: the-king-of-fighters
+  name: The King of Fighters
+  description: Saga japonesa de lucha en equipos de SNK.
+  present_in: [game, movie]
+- slug: fallout
+  name: Fallout
+  description: Saga de rol post-apocaliptico de Bethesda.
+  present_in: [game, series]
+- slug: bioshock
+  name: BioShock
+  description: Saga de accion-rol distopica ambientada en ciudades utopicas fallidas.
+  present_in: [game]
+- slug: portal
+  name: Portal
+  description: Saga de puzles en primera persona de Valve.
+  present_in: [game]
+- slug: half-life
+  name: Half-Life
+  description: Saga de disparos en primera persona de ciencia ficcion de Valve.
+  present_in: [game]
+- slug: doom
+  name: Doom
+  description: Saga pionera de disparos en primera persona contra demonios.
+  present_in: [game, movie]
+- slug: wolfenstein
+  name: Wolfenstein
+  description: Saga de disparos en primera persona contra el regimen nazi.
+  present_in: [game]
+- slug: gears-of-war
+  name: Gears of War
+  description: Saga de disparos en tercera persona de ciencia ficcion militar.
+  present_in: [game, book]
+- slug: uncharted
+  name: Uncharted
+  description: Saga de aventuras de accion protagonizada por Nathan Drake.
+  present_in: [game, movie]
+- slug: horizon
+  name: Horizon
+  description: Saga de accion-rol post-apocaliptica con maquinas robotizadas, de Guerrilla Games.
+  present_in: [game, series]
+- slug: cyberpunk
+  name: Cyberpunk
+  description: Universo ciberpunk de CD Projekt Red, base de Cyberpunk 2077.
+  present_in: [game, series, book]
+- slug: death-stranding
+  name: Death Stranding
+  description: Saga de accion de Hideo Kojima sobre reconectar una America fragmentada.
+  present_in: [game]
+- slug: red-dead-redemption
+  name: Red Dead Redemption
+  description: Saga de accion de mundo abierto ambientada en el lejano oeste, de Rockstar.
+  present_in: [game]
+- slug: minecraft
+  name: Minecraft
+  description: Juego de construccion y supervivencia en mundo de bloques.
+  present_in: [game, movie]
+- slug: persona
+  name: Persona
+  description: Saga japonesa de rol social de Atlus.
+  present_in: [game, series]
+- slug: monster-hunter
+  name: Monster Hunter
+  description: Saga japonesa de caceria de monstruos de Capcom.
+  present_in: [game, movie]
+- slug: devil-may-cry
+  name: Devil May Cry
+  description: Saga japonesa de accion estilizada contra demonios, de Capcom.
+  present_in: [game, series]
+- slug: castlevania
+  name: Castlevania
+  description: Saga japonesa de accion gotica contra Dracula, de Konami.
+  present_in: [game, series]
+- slug: the-walking-dead
+  name: The Walking Dead
+  description: Franquicia post-apocaliptica de zombis basada en los comics de Robert Kirkman.
+  present_in: [series, book, game]
+- slug: sherlock-holmes
+  name: Sherlock Holmes
+  description: El detective creado por Arthur Conan Doyle.
+  present_in: [book, movie, series, game]
+- slug: dracula
+  name: Dracula
+  description: El conde vampiro creado por Bram Stoker.
+  present_in: [book, movie, series, game]
+- slug: discworld
+  name: Discworld
+  description: Saga de fantasia comica de Terry Pratchett.
+  present_in: [book, game]
+- slug: american-gods
+  name: American Gods
+  description: Novela de fantasia de Neil Gaiman sobre dioses antiguos en la America moderna.
+  present_in: [book, series]
+- slug: outlander
+  name: Outlander
+  description: Saga romantica de viajes en el tiempo de Diana Gabaldon.
+  present_in: [book, series]
+- slug: jack-ryan
+  name: Jack Ryan
+  description: Saga de espionaje y thriller politico de Tom Clancy.
+  present_in: [book, movie, series, game]
+- slug: dungeons-and-dragons
+  name: Dungeons & Dragons
+  description: El juego de rol de mesa de fantasia que origino el genero.
+  present_in: [game, movie, series, book]
+- slug: magic-the-gathering
+  name: Magic: The Gathering
+  description: Juego de cartas coleccionables de fantasia.
+  present_in: [game, book]
+- slug: yu-gi-oh
+  name: Yu-Gi-Oh!
+  description: Franquicia japonesa sobre duelos con cartas coleccionables magicas.
+  present_in: [series, movie, game, book]
+- slug: avatar-the-last-airbender
+  name: Avatar: The Last Airbender
+  description: Serie animada sobre un mundo dividido en naciones elementales.
+  present_in: [series, movie, book, game]
+- slug: avatar-cameron
+  name: Avatar (James Cameron)
+  description: Saga de ciencia ficcion de James Cameron ambientada en la luna Pandora.
+  present_in: [movie, game, book]
+- slug: how-to-train-your-dragon
+  name: How to Train Your Dragon
+  description: Saga sobre la amistad entre un vikingo y un dragon, basada en los libros de Cressida Cowell.
+  present_in: [book, movie, series]
+- slug: kung-fu-panda
+  name: Kung Fu Panda
+  description: Saga animada de comedia y artes marciales de DreamWorks.
+  present_in: [movie, series, game]
+- slug: the-simpsons
+  name: The Simpsons
+  description: Serie animada satirica sobre una familia disfuncional estadounidense.
+  present_in: [series, movie, game]
