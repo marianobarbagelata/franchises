@@ -1,0 +1,7 @@
+# Sin pinnear versiones todavía -- estamos en etapa de exploración local.
+# Antes de Fase 2 (AWS) conviene fijar versiones exactas para que el build
+# sea reproducible (lo mismo que un lockfile en cualquier otro lenguaje).
+requests
+pyyaml
+anthropic
+pydantic
