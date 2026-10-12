@@ -6,17 +6,18 @@ import logging
 
 import anthropic
 import requests
+import yaml
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.sdk import Variable, dag, task
 
 logger = logging.getLogger(__name__)
 
-FRANCHISE_SLUG = "lord-of-the-rings"
-FRANCHISE_NAME = "The Lord of the Rings"
-FRANCHISE_DESCRIPTION = (
-    "La saga de fantasia de J.R.R. Tolkien, incluyendo su adaptacion "
-    "cinematografica dirigida por Peter Jackson."
-)
+SEED_PATH = "/opt/airflow/seeds/franchises.yml"
+
+# Entrenamiento con pocas franquicias antes de correr las 101 -- cada corrida
+# completa son ~400 llamadas a APIs externas + ~400 a Claude. Subilo cuando
+# confirmes que anda bien.
+SEED_LIMIT = 5
 
 MATCH_SCHEMA = {
     "type": "object",
@@ -41,11 +42,14 @@ MATCH_SCHEMA = {
 }
 
 
-def _ai_match(source_name: str, candidates: list[dict]) -> list[dict]:
+def _ai_match(source_name: str, franchise: dict, candidates: list[dict]) -> dict:
     """Logica de matching compartida entre las 4 fuentes -- funcion normal,
-    no @task, para no repetir el prompt en cada tarea de match."""
+    no @task, para no repetir el prompt en cada tarea de match. Devuelve el
+    payload {franchise, confirmed} para que el siguiente task en la cadena
+    (load) tenga todo lo que necesita sin tener que sincronizar dos listas
+    expandidas por separado."""
     if not candidates:
-        return []
+        return {"franchise": franchise, "confirmed": []}
 
     client = anthropic.Anthropic(api_key=Variable.get("ANTHROPIC_API_KEY"))
     candidate_lines = "\n".join(
@@ -57,8 +61,8 @@ def _ai_match(source_name: str, candidates: list[dict]) -> list[dict]:
         model="claude-opus-5",
         max_tokens=4096,
         system=(
-            f"Sos un clasificador estricto. Dada la franquicia '{FRANCHISE_NAME}' "
-            f"({FRANCHISE_DESCRIPTION}) y candidatos de la fuente '{source_name}' "
+            f"Sos un clasificador estricto. Dada la franquicia '{franchise['name']}' "
+            f"({franchise['description']}) y candidatos de la fuente '{source_name}' "
             "obtenidos por busqueda de texto libre, decidis cuales pertenecen "
             "genuinamente a esa franquicia. Documentales, detras de camaras, "
             "conciertos, adaptaciones de fans y contenido tangencial NO pertenecen. "
@@ -72,26 +76,30 @@ def _ai_match(source_name: str, candidates: list[dict]) -> list[dict]:
     verdict_by_id = {v["external_id"]: v for v in verdicts}
 
     confirmed_ids = {v["external_id"] for v in verdicts if v["belongs"] and v["confidence"] >= 0.6}
-    logger.info("ai_match[%s]: %d/%d candidatos confirmados", source_name, len(confirmed_ids), len(candidates))
+    logger.info(
+        "ai_match[%s][%s]: %d/%d candidatos confirmados",
+        franchise["slug"], source_name, len(confirmed_ids), len(candidates),
+    )
     for v in verdicts:
         marker = "OK" if v["external_id"] in confirmed_ids else "x "
         logger.info(" %s id=%s confidence=%.2f -- %s", marker, v["external_id"], v["confidence"], v["reason"])
 
-    # Combina cada candidato original (title, source_url, raw_score, ...) con
-    # el veredicto de la IA -- el task de load necesita ambas cosas juntas.
-    return [
+    confirmed = [
         {**c, "match_confidence": verdict_by_id[c["external_id"]]["confidence"]}
         for c in candidates
         if c["external_id"] in confirmed_ids
     ]
+    return {"franchise": franchise, "confirmed": confirmed}
 
 
-def _load_confirmed(source_code: str, work_type: str, confirmed: list[dict]) -> None:
+def _load_confirmed(source_code: str, work_type: str, payload: dict) -> None:
     """Guarda los items confirmados en Postgres. Idempotente: si un
     (source_id, external_id) ya existe en work_source, actualiza en vez de
     duplicar -- por eso podemos re-correr el DAG sin miedo."""
+    franchise = payload["franchise"]
+    confirmed = payload["confirmed"]
     if not confirmed:
-        logger.info("load[%s]: nada para guardar", source_code)
+        logger.info("load[%s][%s]: nada para guardar", franchise["slug"], source_code)
         return
 
     conn = PostgresHook(postgres_conn_id="franchises_db").get_conn()
@@ -104,7 +112,7 @@ def _load_confirmed(source_code: str, work_type: str, confirmed: list[dict]) -> 
         ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name
         RETURNING id
         """,
-        (FRANCHISE_SLUG, FRANCHISE_NAME, FRANCHISE_DESCRIPTION),
+        (franchise["slug"], franchise["name"], franchise["description"]),
     )
     franchise_id = cur.fetchone()[0]
 
@@ -150,28 +158,36 @@ def _load_confirmed(source_code: str, work_type: str, confirmed: list[dict]) -> 
     conn.commit()
     cur.close()
     conn.close()
-    logger.info("load[%s]: %d obras guardadas/actualizadas", source_code, len(confirmed))
+    logger.info("load[%s][%s]: %d obras guardadas/actualizadas", franchise["slug"], source_code, len(confirmed))
 
 
 @dag(
-    dag_id="lotr_discover_and_match",
+    dag_id="franchise_pipeline",
     schedule=None,
     start_date=datetime.datetime(2026, 1, 1),
     catchup=False,
-    tags=["fase-1", "dev"],
+    tags=["fase-1"],
     default_args={
         "retries": 2,
         "retry_delay": datetime.timedelta(seconds=30),
     },
 )
-def lotr_discover_and_match():
+def franchise_pipeline():
     @task
-    def discover_tmdb_movies(query: str = FRANCHISE_NAME) -> list[dict]:
+    def load_seed() -> list[dict]:
+        with open(SEED_PATH, encoding="utf-8") as f:
+            franchises = yaml.safe_load(f)
+        franchises = franchises[:SEED_LIMIT]
+        logger.info("load_seed: %d franquicias (de %d en el archivo)", len(franchises), SEED_LIMIT)
+        return franchises
+
+    @task
+    def discover_tmdb_movies(franchise: dict) -> dict:
         access_token = Variable.get("TMDB_API_KEY")
         response = requests.get(
             "https://api.themoviedb.org/3/search/movie",
             headers={"Authorization": f"Bearer {access_token}", "accept": "application/json"},
-            params={"query": query},
+            params={"query": franchise["name"]},
             timeout=10,
         )
         response.raise_for_status()
@@ -188,16 +204,16 @@ def lotr_discover_and_match():
             }
             for r in results
         ]
-        logger.info("discover_tmdb_movies: %d candidatos crudos", len(candidates))
-        return candidates
+        logger.info("discover_tmdb_movies[%s]: %d candidatos crudos", franchise["slug"], len(candidates))
+        return {"franchise": franchise, "candidates": candidates}
 
     @task
-    def discover_tmdb_series(query: str = FRANCHISE_NAME) -> list[dict]:
+    def discover_tmdb_series(franchise: dict) -> dict:
         access_token = Variable.get("TMDB_API_KEY")
         response = requests.get(
             "https://api.themoviedb.org/3/search/tv",
             headers={"Authorization": f"Bearer {access_token}", "accept": "application/json"},
-            params={"query": query},
+            params={"query": franchise["name"]},
             timeout=10,
         )
         response.raise_for_status()
@@ -214,14 +230,14 @@ def lotr_discover_and_match():
             }
             for r in results
         ]
-        logger.info("discover_tmdb_series: %d candidatos crudos", len(candidates))
-        return candidates
+        logger.info("discover_tmdb_series[%s]: %d candidatos crudos", franchise["slug"], len(candidates))
+        return {"franchise": franchise, "candidates": candidates}
 
     @task
-    def discover_open_library(query: str = FRANCHISE_NAME) -> list[dict]:
+    def discover_open_library(franchise: dict) -> dict:
         response = requests.get(
             "https://openlibrary.org/search.json",
-            params={"q": query, "fields": "key,title,first_publish_year,author_name"},
+            params={"q": franchise["name"], "fields": "key,title,first_publish_year,author_name"},
             headers={"User-Agent": "franchises-project/0.1 (educational project)"},
             timeout=20,
         )
@@ -236,21 +252,20 @@ def lotr_discover_and_match():
                     "title": d.get("title", "?"),
                     "year": str(d.get("first_publish_year", "?")),
                     "overview": ("por " + ", ".join(d.get("author_name", [])[:2])) if d.get("author_name") else "",
-                    # Open Library no expone un puntaje de la comunidad en este endpoint.
                     "raw_score": None,
                     "raw_scale_max": None,
                     "source_url": f"https://openlibrary.org/works/{work_id}",
                 }
             )
-        logger.info("discover_open_library: %d candidatos crudos", len(candidates))
-        return candidates
+        logger.info("discover_open_library[%s]: %d candidatos crudos", franchise["slug"], len(candidates))
+        return {"franchise": franchise, "candidates": candidates}
 
     @task
-    def discover_rawg(query: str = FRANCHISE_NAME) -> list[dict]:
+    def discover_rawg(franchise: dict) -> dict:
         api_key = Variable.get("RAWG_API_KEY")
         response = requests.get(
             "https://api.rawg.io/api/games",
-            params={"search": query, "key": api_key},
+            params={"search": franchise["name"], "key": api_key},
             timeout=10,
         )
         response.raise_for_status()
@@ -267,45 +282,47 @@ def lotr_discover_and_match():
             }
             for g in results
         ]
-        logger.info("discover_rawg: %d candidatos crudos", len(candidates))
-        return candidates
+        logger.info("discover_rawg[%s]: %d candidatos crudos", franchise["slug"], len(candidates))
+        return {"franchise": franchise, "candidates": candidates}
 
     @task
-    def match_tmdb_movies(candidates: list[dict]) -> list[dict]:
-        return _ai_match("TMDB (peliculas)", candidates)
+    def match_tmdb_movies(payload: dict) -> dict:
+        return _ai_match("TMDB (peliculas)", payload["franchise"], payload["candidates"])
 
     @task
-    def match_tmdb_series(candidates: list[dict]) -> list[dict]:
-        return _ai_match("TMDB (series)", candidates)
+    def match_tmdb_series(payload: dict) -> dict:
+        return _ai_match("TMDB (series)", payload["franchise"], payload["candidates"])
 
     @task
-    def match_open_library(candidates: list[dict]) -> list[dict]:
-        return _ai_match("Open Library (libros)", candidates)
+    def match_open_library(payload: dict) -> dict:
+        return _ai_match("Open Library (libros)", payload["franchise"], payload["candidates"])
 
     @task
-    def match_rawg(candidates: list[dict]) -> list[dict]:
-        return _ai_match("RAWG (juegos)", candidates)
+    def match_rawg(payload: dict) -> dict:
+        return _ai_match("RAWG (juegos)", payload["franchise"], payload["candidates"])
 
     @task
-    def load_tmdb_movies(confirmed: list[dict]) -> None:
-        _load_confirmed("tmdb_movie", "movie", confirmed)
+    def load_tmdb_movies(payload: dict) -> None:
+        _load_confirmed("tmdb_movie", "movie", payload)
 
     @task
-    def load_tmdb_series(confirmed: list[dict]) -> None:
-        _load_confirmed("tmdb_series", "series", confirmed)
+    def load_tmdb_series(payload: dict) -> None:
+        _load_confirmed("tmdb_series", "series", payload)
 
     @task
-    def load_open_library(confirmed: list[dict]) -> None:
-        _load_confirmed("open_library", "book", confirmed)
+    def load_open_library(payload: dict) -> None:
+        _load_confirmed("open_library", "book", payload)
 
     @task
-    def load_rawg(confirmed: list[dict]) -> None:
-        _load_confirmed("rawg", "game", confirmed)
+    def load_rawg(payload: dict) -> None:
+        _load_confirmed("rawg", "game", payload)
 
-    load_tmdb_movies(match_tmdb_movies(discover_tmdb_movies()))
-    load_tmdb_series(match_tmdb_series(discover_tmdb_series()))
-    load_open_library(match_open_library(discover_open_library()))
-    load_rawg(match_rawg(discover_rawg()))
+    seed = load_seed()
+
+    load_tmdb_movies.expand(payload=match_tmdb_movies.expand(payload=discover_tmdb_movies.expand(franchise=seed)))
+    load_tmdb_series.expand(payload=match_tmdb_series.expand(payload=discover_tmdb_series.expand(franchise=seed)))
+    load_open_library.expand(payload=match_open_library.expand(payload=discover_open_library.expand(franchise=seed)))
+    load_rawg.expand(payload=match_rawg.expand(payload=discover_rawg.expand(franchise=seed)))
 
 
-lotr_discover_and_match()
+franchise_pipeline()
